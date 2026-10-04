@@ -1,0 +1,66 @@
+ <button id="modeBtn" onclick="toggleMode()" style="position:fixed; top:10px; right:10px; padding:10px 15px; border-radius:20px; border:none; background:blue; color:white; font-weight:bold; z-index:99;">🌙 ليلي</button>
+
+<div style="text-align:center; font-family:monospace; margin-top:60px;">
+  <div id="clock" style="width:240px; height:240px; background:black; border-radius:50%; position:relative; margin:0 auto; border:4px solid blue;">
+    <div class="num" style="position:absolute; color:white; font-weight:bold; font-size:28px; left:102px; top:8px;">12</div>
+    <div class="num" style="position:absolute; color:white; font-weight:bold; font-size:28px; right:15px; top:100px;">3</div>
+    <div class="num" style="position:absolute; color:white; font-weight:bold; font-size:28px; left:108px; bottom:8px;">6</div>
+    <div class="num" style="position:absolute; color:white; font-weight:bold; font-size:28px; left:15px; top:100px;">9</div>
+    <div id="marks"></div>
+    <div id="h" style="position:absolute; width:4px; height:65px; background:yellow; left:118px; top:55px; transform-origin:bottom;"></div>
+    <div id="m" style="position:absolute; width:3px; height:85px; background:cyan; left:118.5px; top:35px; transform-origin:bottom;"></div>
+    <div id="s" style="position:absolute; width:2px; height:95px; background:red; left:119px; top:25px; transform-origin:bottom;"></div>
+    <div style="position:absolute; width:14px; height:14px; background:white; border-radius:50%; left:113px; top:113px;"></div>
+  </div>
+  <div id="time" style="margin-top:20px; background:black; color:cyan; font-size:32px; padding:10px 20px; border-radius:10px; display:inline-block;"></div>
+  <div id="date" style="margin-top:10px; background:black; color:yellow; font-size:16px; padding:8px 15px; border-radius:10px; width:fit-content; margin-left:auto; margin-right:auto;"></div>
+</div>
+
+<script>
+let isDark = true;
+let marksDiv = document.getElementById("marks");
+for(let i=1; i<=12; i++){
+  if([12,3,6,9].includes(i)) continue;
+  let mark = document.createElement("div");
+  mark.className = "mark";
+  mark.style.position = "absolute"; mark.style.width = "3px"; mark.style.height = "12px";
+  mark.style.background = "white"; mark.style.left = "118.5px"; mark.style.top = "10px";
+  mark.style.transformOrigin = "50% 110px"; mark.style.transform = `rotate(${i*30}deg)`;
+  marksDiv.appendChild(mark);
+}
+
+function upDateClock(){
+  let now = new Date();
+  let hh = now.getHours() % 12; let mm = now.getMinutes(); let ss = now.getSeconds();
+  document.getElementById("h").style.transform = `rotate(${(hh*30)+(mm*0.5)}deg)`;
+  document.getElementById("m").style.transform = `rotate(${mm*6}deg)`;
+  document.getElementById("s").style.transform = `rotate(${ss*6}deg)`;
+  document.getElementById("time").innerHTML = String(now.getHours()).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+  document.getElementById("date").innerHTML = now.toLocaleDateString('ar-EG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+}
+setInterval(upDateClock,1000); upDateClock();
+
+function toggleMode(){
+  isDark = !isDark;
+  let body = document.body;
+  let clock = document.getElementById("clock");
+  let nums = document.querySelectorAll(".num");
+  let marks = document.querySelectorAll(".mark");
+  
+  if(isDark){
+    body.style.background = "white"; // خلفية الصفحة
+    clock.style.background = "black"; clock.style.borderColor = "blue";
+    nums.forEach(n => n.style.color = "white");
+    marks.forEach(m => m.style.background = "white");
+    document.getElementById("modeBtn").innerHTML = "🌙 ليلي";
+    document.body.style.background = "white";
+  } else {
+    body.style.background = "#f0f0f0";
+    clock.style.background = "white"; clock.style.borderColor = "black";
+    nums.forEach(n => n.style.color = "black");
+    marks.forEach(m => m.style.background = "black");
+    document.getElementById("modeBtn").innerHTML = "☀️ نهاري";
+  }
+}
+document.body.style.background = "white"; // ابدأ بالوضع الليلي الفخم حقك
+</script>
